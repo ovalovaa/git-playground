@@ -1,17 +1,35 @@
+from itertools import count
+
 import words_fetcher
 import random
 
 
 def congratulate_user():
-    print("You win!")
+    print(f"Congratulations, you won! your words: {guesses}")
 
+def double (word):
+    if word in guesses:
+        print("You cannot use the same word twice")
+        return True
+    return False
 
 def is_game_over():
     return guessed == WORDS_TO_WIN or errors == ERRORS_TO_LOSE
 
-
+def guess_is_valid(candidate):
+    for letter in candidate:
+        if letter not in word:
+            print(f"You can not use this letter{letter}")
+            return False
+        count = word.count(letter)
+        if count < candidate.count(letter):
+            print(f"You can use letter {letter} only {count} times")
+            return False
+    return True
 guessed = 0
 errors = 0
+
+guesses = []
 
 WORDS_TO_WIN = 5
 ERRORS_TO_LOSE = 3
@@ -26,8 +44,12 @@ print(f"Your word is '{word}'")
 
 while not is_game_over():
     guess = input("Your next take: ")
+    if double(guess):
+        print("You cannot use the same word twice")
+        continue
     if guess in full_list:
         guessed += 1
+        guesses.append(guess)
         if guessed == WORDS_TO_WIN:
             congratulate_user()
             exit()
